@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    command: daphne -b 0.0.0.0 -p 8000 edupane_backend.asgi:application
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - db
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - CHANNEL_LAYERS=redis://redis:6379/0
+
+  worker:
+    build: .
+    command: celery -A edupane_backend worker --loglevel=info --concurrency=1
+    depends_on:
+      - redis
+      - db
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+
+  beat:
+    build: .
+    command: celery -A edupane_backend beat -l info
+    depends_on:
+      - redis
+      - db
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    restart: unless-stopped
+    mem_limit: 128m
+
+  db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    mem_limit: 256m

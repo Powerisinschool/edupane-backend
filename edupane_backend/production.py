@@ -20,8 +20,8 @@ ALLOWED_HOSTS = [
 ]
 
 # Add your Azure app service domain here
-if os.environ.get('WEBSITE_HOSTNAME'):
-    ALLOWED_HOSTS.append(os.environ.get('WEBSITE_HOSTNAME'))
+# if os.environ.get('WEBSITE_HOSTNAME'):
+#     ALLOWED_HOSTS.append(os.environ.get('WEBSITE_HOSTNAME'))
 
 # CORS settings for production
 CORS_ALLOWED_ORIGINS = [
@@ -30,8 +30,8 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 # Add your frontend domain here
-if os.environ.get('FRONTEND_URL'):
-    CORS_ALLOWED_ORIGINS.append(os.environ.get('FRONTEND_URL'))
+# if os.environ.get('FRONTEND_URL'):
+#     CORS_ALLOWED_ORIGINS.append(os.environ.get('FRONTEND_URL'))
 
 # Static files configuration
 STATIC_URL = '/static/'
@@ -54,22 +54,21 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 
 # Database configuration for Azure
-if os.environ.get('DATABASE_URL'):
-    import dj_database_url
-    DATABASES = {
-        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
-    }
+# if os.environ.get('DATABASE_URL'):
+#     import dj_database_url
+#     DATABASES = {
+#         'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
+#     }
 
 # Redis configuration for Azure
-if os.environ.get('REDIS_URL'):
-    CHANNEL_LAYERS = {
-        "default": {
-            "BACKEND": "channels_redis.core.RedisChannelLayer",
-            "CONFIG": {
-                "hosts": [os.environ.get('REDIS_URL')],
-            },
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("edupane.redis.cache.windows.net", 6380)],
         },
-    }
+    },
+}
 
 # Logging configuration
 LOGGING = {
@@ -85,3 +84,7 @@ LOGGING = {
         'level': 'INFO',
     },
 }
+
+# Celery Configuration
+CELERY_BROKER_URL = 'redis://edupane.redis.cache.windows.net/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
