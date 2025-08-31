@@ -1,7 +1,6 @@
 from urllib.parse import parse_qs
 from channels.auth import AuthMiddlewareStack
 from channels.db import database_sync_to_async
-from rest_framework_simplejwt.tokens import AccessToken
 from django.contrib.auth.models import AnonymousUser
 from django.conf import settings
 from django.db import close_old_connections
@@ -25,6 +24,7 @@ class JWTAuthMiddleware:
         self.app = app
 
     async def __call__(self, scope, receive, send):
+        from rest_framework_simplejwt.tokens import AccessToken
         """Authenticate the user based on jwt."""
         close_old_connections()
         try:
