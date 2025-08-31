@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-ri@htkk2%tqky@_%95#adq*ipk_fi@wfj1hiqn4%q&g@p*ou@$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '34.122.116.146', 'api.edupane.olagunju.ng']
 
 AUTH_USER_MODEL = 'users.User'
 
@@ -43,7 +43,6 @@ CHANNEL_LAYERS = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
     "http://127.0.0.1:4200",
-    # "http://34.122.116.146",
     "http://edupane-d8a70.web.app",
     "https://edupane-d8a70.web.app",
     "http://edupane.olagunju.ng",
