@@ -43,6 +43,9 @@ CHANNEL_LAYERS = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
     "http://127.0.0.1:4200",
+    # "http://34.122.116.146",
+    "http://edupane-d8a70.web.app",
+    "https://edupane-d8a70.web.app",
     "http://edupane.olagunju.ng",
     "https://edupane.olagunju.ng",
 ]
