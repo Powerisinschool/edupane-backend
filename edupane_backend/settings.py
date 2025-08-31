@@ -47,6 +47,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://edupane-d8a70.web.app",
     "http://edupane.olagunju.ng",
     "https://edupane.olagunju.ng",
+    "http://edupane-api.olagunju.ng",
+    "https://edupane-api.olagunju.ng",
 ]
 
 CORS_ALLOW_CREDENTIALS = True

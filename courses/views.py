@@ -205,6 +205,28 @@ class CourseViewSet(viewsets.ModelViewSet):
         materials = Material.objects.filter(course=course)
         return Response(MaterialSerializer(materials, many=True).data)
     
+    @action(detail=True, methods=['delete'], url_path='materials/(?P<material_id>[^/.]+)')
+    def delete_material(self, request, pk=None, material_id=None):
+        """Delete course material (teachers only)"""
+        course = self.get_object()
+        
+        if course.owner != request.user:
+            return Response({
+                'error': 'Only course owner can delete materials'
+            }, status=status.HTTP_403_FORBIDDEN)
+        
+        try:
+            material = Material.objects.get(id=material_id, course=course)
+            # Delete the actual file from storage
+            if material.file:
+                material.file.delete(save=False)
+            material.delete()
+            return Response({'success': True, 'message': 'Material deleted successfully'})
+        except Material.DoesNotExist:
+            return Response({
+                'error': 'Material not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+    
     @action(detail=True, methods=['get'])
     def enrollments(self, request, pk=None):
         """Get course enrollments (teachers only)"""
