@@ -3,6 +3,7 @@ version: "3.9"
 services:
   web:
     build: .
+    # Using the exact command from your file
     command: daphne -b 0.0.0.0 -p 8000 edupane_backend.asgi:application
     ports:
       - "8000:8000"
@@ -14,6 +15,10 @@ services:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
       - CHANNEL_LAYERS=redis://redis:6379/0
+      # SECURITY: Change this to 'False' in production
+      - DEBUG=False 
+      # Add your VM IP here once you have it
+      - ALLOWED_HOSTS=localhost,127.0.0.1,<YOUR_AZURE_VM_IP>
 
   worker:
     build: .
@@ -38,9 +43,10 @@ services:
 
   redis:
     image: redis:7-alpine
-    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
     restart: unless-stopped
-    mem_limit: 128m
+    volumes:
+      - redis_data:/data  # <--- Added Persistence
 
   db:
     image: postgres:15-alpine
@@ -48,4 +54,10 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-    mem_limit: 256m
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # <--- Added Persistence
+
+volumes:
+  postgres_data:
+  redis_data:
