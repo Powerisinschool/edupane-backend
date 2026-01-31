@@ -1,0 +1,45 @@
+databases:
+  - name: edupane-db
+    databaseName: edupane
+    user: edupane_user
+    plan: free
+    region: frankfurt # Choose the region closest to you/users
+
+services:
+  - type: redis
+    name: edupane-redis
+    region: frankfurt
+    plan: free # Note: Free Redis on Render is ephemeral (clears on restart)
+    ipAllowList: [] # Allows internal connections only
+
+  - type: web
+    name: edupane-web
+    runtime: docker
+    region: frankfurt
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: edupane-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: edupane-redis
+          property: connectionString
+      - key: CELERY_BROKER_URL
+        fromService:
+          type: redis
+          name: edupane-redis
+          property: connectionString
+      - key: CHANNEL_LAYERS
+        fromService:
+          type: redis
+          name: edupane-redis
+          property: connectionString
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: "*" # Or set to your specific render domain later

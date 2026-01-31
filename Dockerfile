@@ -13,5 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project
 COPY . .
 
-# Run Daphne (not gunicorn)
-CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "edupane_backend.asgi:application"]
+# Grant execution rights to the script
+RUN chmod +x render_start.sh
+
+# Run the custom script instead of just daphne
+CMD ["./render_start.sh"]
