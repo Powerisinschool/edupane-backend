@@ -17,6 +17,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     '.azurewebsites.net',
     '.azure.com',
+    'edupane-backend.onrender.com',
 ]
 
 # Add your Azure app service domain here
@@ -27,6 +28,7 @@ ALLOWED_HOSTS = [
 CORS_ALLOWED_ORIGINS = [
     "https://edupane-python-webapp.azurewebsites.net",
     "https://edupane-python-webapp.azure.com",
+    "https://edupane-backend.onrender.com",
 ]
 
 # Add your frontend domain here
